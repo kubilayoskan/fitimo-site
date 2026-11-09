@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fontes de dados — Fitimo</title>
+<meta name="description" content="Os valores nutricionais no Fitimo vêm de fontes oficiais gratuitas e de licença aberta e de uma base de dados colaborativa. Os valores são estimativas; par">
+<link rel="canonical" href="https://fitimo.co/pt/sources/">
+<link rel="alternate" hreflang="en" href="https://fitimo.co/sources/">
+<link rel="alternate" hreflang="tr" href="https://fitimo.co/tr/sources/">
+<link rel="alternate" hreflang="de" href="https://fitimo.co/de/sources/">
+<link rel="alternate" hreflang="fr" href="https://fitimo.co/fr/sources/">
+<link rel="alternate" hreflang="es" href="https://fitimo.co/es/sources/">
+<link rel="alternate" hreflang="pt-BR" href="https://fitimo.co/pt/sources/">
+<link rel="alternate" hreflang="it" href="https://fitimo.co/it/sources/">
+<link rel="alternate" hreflang="nl" href="https://fitimo.co/nl/sources/">
+<link rel="alternate" hreflang="pl" href="https://fitimo.co/pl/sources/">
+<link rel="alternate" hreflang="ja" href="https://fitimo.co/ja/sources/">
+<link rel="alternate" hreflang="ko" href="https://fitimo.co/ko/sources/">
+<link rel="alternate" hreflang="x-default" href="https://fitimo.co/sources/">
+<link rel="icon" href="/favicon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#FFFFFF">
+
+
+<style>/* Always light: white page, soft green accents (owner's choice, D-163). Logo colours (D-164): navy #101828 + green
+   #3CB484; buttons/links use the same green one step deeper (#2B825F) so white text and links pass WCAG AA. */
+:root{--bg:#FFFFFF;--surface:#FAFCFB;--ink:#101828;--ink2:#475467;--ink3:#667085;--line:#EAF0EC;--accent:#2B825F;--accent2:#3CB484;--tint:#EAF7F1;--warn:#FFF7E0;--warnInk:#6B4E00;color-scheme:light}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans","Hiragino Sans","Apple SD Gothic Neo",sans-serif}
+a{color:var(--accent)}
+.wrap{max-width:860px;margin:0 auto;padding:0 16px}
+.top{position:sticky;top:0;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:saturate(1.4) blur(10px);-webkit-backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--line);z-index:2}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:60px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--ink);font-weight:800;font-size:20px;letter-spacing:-.01em}
+.brand img{border-radius:10px}
+nav{display:flex;gap:16px;flex-wrap:wrap}
+nav a{color:var(--ink2);text-decoration:none;font-weight:600;font-size:15px}
+nav a:hover{color:var(--accent)}
+.draft{background:var(--warn);color:var(--warnInk);text-align:center;padding:8px 16px;font-weight:600;font-size:14px}
+.hero{text-align:center;padding:56px 0 24px}
+.hero h1{font-size:clamp(28px,6vw,44px);line-height:1.15;letter-spacing:-.02em;margin:16px auto 12px;max-width:720px}
+.mascot{border-radius:28px;background:var(--tint)}
+.lead{font-size:clamp(17px,2.4vw,19px);color:var(--ink2);max-width:640px;margin:0 auto 24px}
+.btn{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;font-weight:700;padding:14px 26px;border-radius:999px}
+.btn.ghost{background:var(--tint);color:var(--accent)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px;margin:32px 0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:20px}
+.card h3{margin:0 0 6px;font-size:17px}
+.card p{margin:0;color:var(--ink2);font-size:15px}
+.note{color:var(--ink3);font-size:14px;text-align:center;margin:8px 0 48px}
+.doc{background:var(--surface);border:1px solid var(--line);border-radius:24px;padding:28px clamp(18px,4vw,40px);margin:28px 0 40px}
+.doc h1{font-size:clamp(26px,5vw,34px);line-height:1.2;letter-spacing:-.015em;margin:0 0 6px}
+.doc h2{font-size:19px;margin:28px 0 8px}
+.doc p,.doc li{color:var(--ink);overflow-wrap:anywhere}
+.doc ul{padding-left:22px}
+.doc li{margin:4px 0}
+.meta{color:var(--ink3);font-size:14px;margin:0 0 16px}
+.courtesy{background:var(--tint);border-radius:12px;padding:10px 14px;font-size:14px;color:var(--ink2)}
+.mail{font-size:17px}
+details{border-top:1px solid var(--line);padding:12px 0}
+details:last-of-type{border-bottom:1px solid var(--line)}
+summary{cursor:pointer;font-weight:650;list-style-position:outside}
+details p{color:var(--ink2);margin:8px 0 0}
+footer{border-top:1px solid var(--line);padding:24px 0 40px;color:var(--ink2);font-size:14px}
+.langs{display:flex;flex-wrap:wrap;gap:6px 14px;margin-bottom:12px}
+.langs a{color:var(--ink2);text-decoration:none}
+.langs a[aria-current]{color:var(--accent);font-weight:700}
+.docs a{color:var(--ink2)}
+.small{color:var(--ink3);margin:6px 0 0}
+</style>
+</head>
+<body>
+
+<header class="top"><div class="wrap">
+<a class="brand" href="/pt/"><img src="/mark.png" alt="" width="36" height="36"><span>Fitimo</span></a>
+<nav aria-label="Documentos legais"><a href="/pt/support/">Suporte</a><a href="/pt/privacy/">Privacidade</a><a href="/pt/terms/">Termos</a></nav>
+</div></header>
+<main class="wrap">
+<article class="doc">
+<h1>Fontes de dados</h1>
+<p class="meta">Última atualização: 7 de novembro de 2026</p>
+<p class="courtesy">Esta é uma tradução informativa. O texto vinculante é a versão em turco. <a href="/tr/sources/" lang="tr">Veri kaynakları</a></p>
+<p>Os valores nutricionais no Fitimo vêm de fontes oficiais gratuitas e de licença aberta e de uma base de dados colaborativa. Os valores são estimativas; para produtos embalados, o rótulo da embalagem é a referência oficial.</p>
+<p><strong>Departamento de Agricultura dos EUA (USDA) FoodData Central</strong><br>Alimentos básicos (Foundation, SR Legacy) e pratos prontos (FNDDS 2019–2020). U.S. Department of Agriculture, Agricultural Research Service. Domínio público.</p>
+<p><strong>McCance and Widdowson's The Composition of Foods Integrated Dataset 2021 (Reino Unido)</strong><br>Contains public sector information licensed under the Open Government Licence v3.0.</p>
+<p><strong>Australian Food Composition Database – Release 3 (Austrália)</strong><br>Food Standards Australia New Zealand. Usado sob a licença Creative Commons Attribution 4.0 (CC BY 4.0); modificado pela Fitimo (nomes traduzidos, algumas linhas filtradas); o uso por este aplicativo não implica endosso por parte do órgão de origem.</p>
+<p><strong>Canadian Nutrient File 2015 (Canadá)</strong><br>Health Canada. Contains information licensed under the Open Government Licence – Canada.</p>
+<p><strong>Ciqual 2025 (França)</strong><br>Anses. 2025. Table de composition nutritionnelle des aliments Ciqual. Usado sob a Licença Aberta Etalab 2.0.</p>
+<p><strong>Bundeslebensmittelschlüssel (BLS) 4.0 (Alemanha)</strong><br>Max Rubner-Institut (2025): Bundeslebensmittelschlüssel (BLS), Version 4.0 — Deutsche Nährstoffdatenbank. Karlsruhe. DOI: 10.25826/Data20251217-134202-0. Utilizado sob a licença CC BY 4.0; modificado pela Fitimo.</p>
+<p><strong>Swiss Food Composition Database 7.1 (Suíça)</strong><br>Swiss Food Composition Database, Federal Food Safety and Veterinary Office FSVO, naehrwertdaten.ch. Utilizado com indicação da fonte (uso aberto).</p>
+<p><strong>日本食品標準成分表（八訂）増補2023年 (Japão)</strong><br>出典：日本食品標準成分表（八訂）増補2023年（文部科学省）を加工して作成。Modificado pela Fitimo.</p>
+<p><strong>전국통합식품영양성분정보 (Coreia)</strong><br>출처: 식품의약품안전처 식품영양성분 데이터베이스 / 공공데이터포털(data.go.kr). Dados públicos sem restrição de uso (data.go.kr).</p>
+<p><strong>Open Food Facts</strong><br>Busca por código de barras e produtos embalados. © Open Food Facts contributors, openfoodfacts.org. A base de dados é licenciada sob a Open Database License (ODbL).</p>
+<p><strong>USDA FoodData Central — Branded Foods</strong><br>Pesquisa de produtos embalados por código de barras (EUA e Canadá). U.S. Department of Agriculture, Agricultural Research Service. Domínio público (CC0 1.0).</p>
+<p><strong>Usuários do Fitimo</strong><br>Informações de produtos compartilhadas por usuários; não verificadas pelo Fitimo.</p>
+<p><strong>Receitas</strong><br>Os valores dos pratos de cozinhas do mundo são calculados pelo Fitimo a partir dos ingredientes listados nas fontes acima.</p>
+<p><strong>Imagens de alimentos</strong><br>Ícones de alimentos coloridos: Fluent Emoji, © Microsoft Corporation, licença MIT (github.com/microsoft/fluentui-emoji). As fotos foram criadas para o Fitimo.</p>
+</article></main>
+<footer><div class="wrap">
+<div class="langs" aria-label="Language"><a href="/sources/" lang="en" data-lang="en">English</a><a href="/tr/sources/" lang="tr" data-lang="tr">Türkçe</a><a href="/de/sources/" lang="de" data-lang="de">Deutsch</a><a href="/fr/sources/" lang="fr" data-lang="fr">Français</a><a href="/es/sources/" lang="es" data-lang="es">Español</a><a href="/pt/sources/" lang="pt-BR" data-lang="pt" aria-current="true">Português</a><a href="/it/sources/" lang="it" data-lang="it">Italiano</a><a href="/nl/sources/" lang="nl" data-lang="nl">Nederlands</a><a href="/pl/sources/" lang="pl" data-lang="pl">Polski</a><a href="/ja/sources/" lang="ja" data-lang="ja">日本語</a><a href="/ko/sources/" lang="ko" data-lang="ko">한국어</a></div>
+<p class="docs"><a href="/pt/privacy/">Política de Privacidade</a> · <a href="/pt/terms/">Termos de Uso</a> · <a href="/pt/health/">Aviso de Saúde</a> · <a href="/pt/kvkk/">Nota de Divulgação KVKK</a> · <a href="/pt/sources/">Fontes de dados</a> · <a href="/pt/support/">Suporte</a></p>
+<p class="small">© 2026 Kubilay Oskan (Fikirizma Media) · <a href="mailto:info@fikirizma.com">info@fikirizma.com</a></p>
+<p class="small">O Fitimo não oferece aconselhamento médico e não se destina a diagnosticar ou tratar doenças. Para maiores de 18 anos.</p>
+</div></footer>
+<script>document.querySelectorAll('[data-lang]').forEach(function(a){a.addEventListener('click',function(){try{localStorage.setItem('fitimo-lang',a.dataset.lang)}catch(e){}})});</script>
+</body>
+</html>

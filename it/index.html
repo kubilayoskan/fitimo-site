@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fitimo — Conta calorie e coach per la dieta</title>
+<meta name="description" content="Fitimo crea il tuo piano personale di calorie e macro, rende la registrazione dei pasti questione di secondi e adatta il piano insieme a te ogni settimana. Fotografa il piatto e l’IA stima le calorie.">
+<link rel="canonical" href="https://fitimo.co/it/">
+<link rel="alternate" hreflang="en" href="https://fitimo.co/">
+<link rel="alternate" hreflang="tr" href="https://fitimo.co/tr/">
+<link rel="alternate" hreflang="de" href="https://fitimo.co/de/">
+<link rel="alternate" hreflang="fr" href="https://fitimo.co/fr/">
+<link rel="alternate" hreflang="es" href="https://fitimo.co/es/">
+<link rel="alternate" hreflang="pt-BR" href="https://fitimo.co/pt/">
+<link rel="alternate" hreflang="it" href="https://fitimo.co/it/">
+<link rel="alternate" hreflang="nl" href="https://fitimo.co/nl/">
+<link rel="alternate" hreflang="pl" href="https://fitimo.co/pl/">
+<link rel="alternate" hreflang="ja" href="https://fitimo.co/ja/">
+<link rel="alternate" hreflang="ko" href="https://fitimo.co/ko/">
+<link rel="alternate" hreflang="x-default" href="https://fitimo.co/">
+<link rel="icon" href="/favicon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#FFFFFF">
+
+
+<style>/* Always light: white page, soft green accents (owner's choice, D-163). Logo colours (D-164): navy #101828 + green
+   #3CB484; buttons/links use the same green one step deeper (#2B825F) so white text and links pass WCAG AA. */
+:root{--bg:#FFFFFF;--surface:#FAFCFB;--ink:#101828;--ink2:#475467;--ink3:#667085;--line:#EAF0EC;--accent:#2B825F;--accent2:#3CB484;--tint:#EAF7F1;--warn:#FFF7E0;--warnInk:#6B4E00;color-scheme:light}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans","Hiragino Sans","Apple SD Gothic Neo",sans-serif}
+a{color:var(--accent)}
+.wrap{max-width:860px;margin:0 auto;padding:0 16px}
+.top{position:sticky;top:0;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:saturate(1.4) blur(10px);-webkit-backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--line);z-index:2}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:60px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--ink);font-weight:800;font-size:20px;letter-spacing:-.01em}
+.brand img{border-radius:10px}
+nav{display:flex;gap:16px;flex-wrap:wrap}
+nav a{color:var(--ink2);text-decoration:none;font-weight:600;font-size:15px}
+nav a:hover{color:var(--accent)}
+.draft{background:var(--warn);color:var(--warnInk);text-align:center;padding:8px 16px;font-weight:600;font-size:14px}
+.hero{text-align:center;padding:56px 0 24px}
+.hero h1{font-size:clamp(28px,6vw,44px);line-height:1.15;letter-spacing:-.02em;margin:16px auto 12px;max-width:720px}
+.mascot{border-radius:28px;background:var(--tint)}
+.lead{font-size:clamp(17px,2.4vw,19px);color:var(--ink2);max-width:640px;margin:0 auto 24px}
+.btn{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;font-weight:700;padding:14px 26px;border-radius:999px}
+.btn.ghost{background:var(--tint);color:var(--accent)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px;margin:32px 0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:20px}
+.card h3{margin:0 0 6px;font-size:17px}
+.card p{margin:0;color:var(--ink2);font-size:15px}
+.note{color:var(--ink3);font-size:14px;text-align:center;margin:8px 0 48px}
+.doc{background:var(--surface);border:1px solid var(--line);border-radius:24px;padding:28px clamp(18px,4vw,40px);margin:28px 0 40px}
+.doc h1{font-size:clamp(26px,5vw,34px);line-height:1.2;letter-spacing:-.015em;margin:0 0 6px}
+.doc h2{font-size:19px;margin:28px 0 8px}
+.doc p,.doc li{color:var(--ink);overflow-wrap:anywhere}
+.doc ul{padding-left:22px}
+.doc li{margin:4px 0}
+.meta{color:var(--ink3);font-size:14px;margin:0 0 16px}
+.courtesy{background:var(--tint);border-radius:12px;padding:10px 14px;font-size:14px;color:var(--ink2)}
+.mail{font-size:17px}
+details{border-top:1px solid var(--line);padding:12px 0}
+details:last-of-type{border-bottom:1px solid var(--line)}
+summary{cursor:pointer;font-weight:650;list-style-position:outside}
+details p{color:var(--ink2);margin:8px 0 0}
+footer{border-top:1px solid var(--line);padding:24px 0 40px;color:var(--ink2);font-size:14px}
+.langs{display:flex;flex-wrap:wrap;gap:6px 14px;margin-bottom:12px}
+.langs a{color:var(--ink2);text-decoration:none}
+.langs a[aria-current]{color:var(--accent);font-weight:700}
+.docs a{color:var(--ink2)}
+.small{color:var(--ink3);margin:6px 0 0}
+</style>
+</head>
+<body>
+
+<header class="top"><div class="wrap">
+<a class="brand" href="/it/"><img src="/mark.png" alt="" width="36" height="36"><span>Fitimo</span></a>
+<nav aria-label="Documenti legali"><a href="/it/support/">Assistenza</a><a href="/it/privacy/">Privacy</a><a href="/it/terms/">Termini</a></nav>
+</div></header>
+<main class="wrap">
+<section class="hero">
+<img class="mascot" src="/mark.png" alt="" width="120" height="120">
+<h1>Dimagrisci al tuo ritmo, senza fame e senza cibi vietati.</h1>
+<p class="lead">Fitimo crea il tuo piano personale di calorie e macro, rende la registrazione dei pasti questione di secondi e adatta il piano insieme a te ogni settimana. Fotografa il piatto e l’IA stima le calorie.</p>
+<span class="btn ghost" aria-disabled="true">Presto su App Store</span>
+</section>
+<section class="grid"><article class="card"><h3>Calorie da una foto</h3><p>L’IA riconosce gli alimenti nel piatto e stima porzioni e calorie con un intervallo; l’ultima parola è tua.</p></article><article class="card"><h3>Il tuo piano</h3><p>Obiettivi di calorie e macro con l’equazione di Mifflin-St Jeor; mai sotto una soglia sicura.</p></article><article class="card"><h3>Registra in pochi secondi</h3><p>Oltre 45.000 alimenti, scanner di codici a barre, lettura dell’etichetta e 90 ricette sane.</p></article><article class="card"><h3>I tuoi dati restano tuoi</h3><p>Diario, peso e dati sulla salute restano sul tuo telefono. Niente pubblicità, nessuna vendita di dati.</p></article></section>
+<p class="note">Fitimo non fornisce consigli medici e non è destinato a diagnosticare o curare malattie. Riservato ai maggiori di 18 anni.</p></main>
+<footer><div class="wrap">
+<div class="langs" aria-label="Language"><a href="/" lang="en" data-lang="en">English</a><a href="/tr/" lang="tr" data-lang="tr">Türkçe</a><a href="/de/" lang="de" data-lang="de">Deutsch</a><a href="/fr/" lang="fr" data-lang="fr">Français</a><a href="/es/" lang="es" data-lang="es">Español</a><a href="/pt/" lang="pt-BR" data-lang="pt">Português</a><a href="/it/" lang="it" data-lang="it" aria-current="true">Italiano</a><a href="/nl/" lang="nl" data-lang="nl">Nederlands</a><a href="/pl/" lang="pl" data-lang="pl">Polski</a><a href="/ja/" lang="ja" data-lang="ja">日本語</a><a href="/ko/" lang="ko" data-lang="ko">한국어</a></div>
+<p class="docs"><a href="/it/privacy/">Informativa sulla privacy</a> · <a href="/it/terms/">Termini di utilizzo</a> · <a href="/it/health/">Avviso sanitario</a> · <a href="/it/kvkk/">Informativa KVKK</a> · <a href="/it/sources/">Fonti dei dati</a> · <a href="/it/support/">Assistenza</a></p>
+<p class="small">© 2026 Kubilay Oskan (Fikirizma Media) · <a href="mailto:info@fikirizma.com">info@fikirizma.com</a></p>
+<p class="small">Fitimo non fornisce consigli medici e non è destinato a diagnosticare o curare malattie. Riservato ai maggiori di 18 anni.</p>
+</div></footer>
+<script>document.querySelectorAll('[data-lang]').forEach(function(a){a.addEventListener('click',function(){try{localStorage.setItem('fitimo-lang',a.dataset.lang)}catch(e){}})});</script>
+</body>
+</html>

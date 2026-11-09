@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://fitimo.co/sitemap.xml

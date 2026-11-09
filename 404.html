@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fitimo</title>
+<meta name="description" content="Fitimo builds a personal calorie and macro plan, makes logging take seconds and adjusts your plan with you every week. Snap a photo of your plate and AI estimates the calories.">
+<link rel="canonical" href="https://fitimo.co/">
+<link rel="alternate" hreflang="en" href="https://fitimo.co/">
+<link rel="alternate" hreflang="tr" href="https://fitimo.co/tr/">
+<link rel="alternate" hreflang="de" href="https://fitimo.co/de/">
+<link rel="alternate" hreflang="fr" href="https://fitimo.co/fr/">
+<link rel="alternate" hreflang="es" href="https://fitimo.co/es/">
+<link rel="alternate" hreflang="pt-BR" href="https://fitimo.co/pt/">
+<link rel="alternate" hreflang="it" href="https://fitimo.co/it/">
+<link rel="alternate" hreflang="nl" href="https://fitimo.co/nl/">
+<link rel="alternate" hreflang="pl" href="https://fitimo.co/pl/">
+<link rel="alternate" hreflang="ja" href="https://fitimo.co/ja/">
+<link rel="alternate" hreflang="ko" href="https://fitimo.co/ko/">
+<link rel="alternate" hreflang="x-default" href="https://fitimo.co/">
+<link rel="icon" href="/favicon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#FFFFFF">
+
+<script>(function(){try{if(localStorage.getItem('fitimo-lang'))return;var L=["en","tr","de","fr","es","pt","it","nl","pl","ja","ko"];var n=(navigator.languages||[navigator.language||'']).map(function(x){return String(x).slice(0,2).toLowerCase()});for(var i=0;i<n.length;i++){if(n[i]==='en')return;if(L.indexOf(n[i])>-1){location.replace('/'+n[i]+location.pathname+location.search+location.hash);return}}}catch(e){}})();</script>
+<style>/* Always light: white page, soft green accents (owner's choice, D-163). Logo colours (D-164): navy #101828 + green
+   #3CB484; buttons/links use the same green one step deeper (#2B825F) so white text and links pass WCAG AA. */
+:root{--bg:#FFFFFF;--surface:#FAFCFB;--ink:#101828;--ink2:#475467;--ink3:#667085;--line:#EAF0EC;--accent:#2B825F;--accent2:#3CB484;--tint:#EAF7F1;--warn:#FFF7E0;--warnInk:#6B4E00;color-scheme:light}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans","Hiragino Sans","Apple SD Gothic Neo",sans-serif}
+a{color:var(--accent)}
+.wrap{max-width:860px;margin:0 auto;padding:0 16px}
+.top{position:sticky;top:0;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:saturate(1.4) blur(10px);-webkit-backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--line);z-index:2}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:60px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--ink);font-weight:800;font-size:20px;letter-spacing:-.01em}
+.brand img{border-radius:10px}
+nav{display:flex;gap:16px;flex-wrap:wrap}
+nav a{color:var(--ink2);text-decoration:none;font-weight:600;font-size:15px}
+nav a:hover{color:var(--accent)}
+.draft{background:var(--warn);color:var(--warnInk);text-align:center;padding:8px 16px;font-weight:600;font-size:14px}
+.hero{text-align:center;padding:56px 0 24px}
+.hero h1{font-size:clamp(28px,6vw,44px);line-height:1.15;letter-spacing:-.02em;margin:16px auto 12px;max-width:720px}
+.mascot{border-radius:28px;background:var(--tint)}
+.lead{font-size:clamp(17px,2.4vw,19px);color:var(--ink2);max-width:640px;margin:0 auto 24px}
+.btn{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;font-weight:700;padding:14px 26px;border-radius:999px}
+.btn.ghost{background:var(--tint);color:var(--accent)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px;margin:32px 0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:20px}
+.card h3{margin:0 0 6px;font-size:17px}
+.card p{margin:0;color:var(--ink2);font-size:15px}
+.note{color:var(--ink3);font-size:14px;text-align:center;margin:8px 0 48px}
+.doc{background:var(--surface);border:1px solid var(--line);border-radius:24px;padding:28px clamp(18px,4vw,40px);margin:28px 0 40px}
+.doc h1{font-size:clamp(26px,5vw,34px);line-height:1.2;letter-spacing:-.015em;margin:0 0 6px}
+.doc h2{font-size:19px;margin:28px 0 8px}
+.doc p,.doc li{color:var(--ink);overflow-wrap:anywhere}
+.doc ul{padding-left:22px}
+.doc li{margin:4px 0}
+.meta{color:var(--ink3);font-size:14px;margin:0 0 16px}
+.courtesy{background:var(--tint);border-radius:12px;padding:10px 14px;font-size:14px;color:var(--ink2)}
+.mail{font-size:17px}
+details{border-top:1px solid var(--line);padding:12px 0}
+details:last-of-type{border-bottom:1px solid var(--line)}
+summary{cursor:pointer;font-weight:650;list-style-position:outside}
+details p{color:var(--ink2);margin:8px 0 0}
+footer{border-top:1px solid var(--line);padding:24px 0 40px;color:var(--ink2);font-size:14px}
+.langs{display:flex;flex-wrap:wrap;gap:6px 14px;margin-bottom:12px}
+.langs a{color:var(--ink2);text-decoration:none}
+.langs a[aria-current]{color:var(--accent);font-weight:700}
+.docs a{color:var(--ink2)}
+.small{color:var(--ink3);margin:6px 0 0}
+</style>
+</head>
+<body>
+
+<header class="top"><div class="wrap">
+<a class="brand" href="/"><img src="/mark.png" alt="" width="36" height="36"><span>Fitimo</span></a>
+<nav aria-label="Legal documents"><a href="/support/">Support</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a></nav>
+</div></header>
+<main class="wrap"><section class="hero"><h1>404</h1><p class="lead"><a href="/">fitimo.co</a></p></section></main>
+<footer><div class="wrap">
+<div class="langs" aria-label="Language"><a href="/" lang="en" data-lang="en" aria-current="true">English</a><a href="/tr/" lang="tr" data-lang="tr">Türkçe</a><a href="/de/" lang="de" data-lang="de">Deutsch</a><a href="/fr/" lang="fr" data-lang="fr">Français</a><a href="/es/" lang="es" data-lang="es">Español</a><a href="/pt/" lang="pt-BR" data-lang="pt">Português</a><a href="/it/" lang="it" data-lang="it">Italiano</a><a href="/nl/" lang="nl" data-lang="nl">Nederlands</a><a href="/pl/" lang="pl" data-lang="pl">Polski</a><a href="/ja/" lang="ja" data-lang="ja">日本語</a><a href="/ko/" lang="ko" data-lang="ko">한국어</a></div>
+<p class="docs"><a href="/privacy/">Privacy Policy</a> · <a href="/terms/">Terms of Use</a> · <a href="/health/">Health Disclaimer</a> · <a href="/kvkk/">KVKK Disclosure Notice</a> · <a href="/sources/">Data sources</a> · <a href="/support/">Support</a></p>
+<p class="small">© 2026 Kubilay Oskan (Fikirizma Media) · <a href="mailto:info@fikirizma.com">info@fikirizma.com</a></p>
+<p class="small">Fitimo does not provide medical advice and is not intended to diagnose or treat any condition. For adults 18 and over.</p>
+</div></footer>
+<script>document.querySelectorAll('[data-lang]').forEach(function(a){a.addEventListener('click',function(){try{localStorage.setItem('fitimo-lang',a.dataset.lang)}catch(e){}})});</script>
+</body>
+</html>
