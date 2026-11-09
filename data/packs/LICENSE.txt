@@ -1,0 +1,4 @@
+These product packs are derived from Open Food Facts (https://openfoodfacts.org).
+Database: Open Database License (ODbL) 1.0 — https://opendatacommons.org/licenses/odbl/1-0/
+Contents: Database Contents License (DbCL) 1.0 — https://opendatacommons.org/licenses/dbcl/1-0/
+Built by Fitimo (fitimo.co) from the public export; free to reuse under the same licence.
