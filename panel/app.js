@@ -94,10 +94,10 @@
 
   submit('fEmail', async (v) => {
     email = v.toLowerCase();
-    const r = await call('/otp', { email, create_user: false });
+    const r = await call('/otp?redirect_to=' + encodeURIComponent(location.origin + location.pathname), { email, create_user: false });
     if (r.status === 429) return msg('Çok fazla deneme. Bir süre sonra yeniden dene.');
     // Same answer whether or not the address has an account.
-    show('fCode'); $('loginHint').textContent = 'Bu adres kayıtlıysa bir kod gönderildi.';
+    show('fCode'); $('loginHint').textContent = 'Bu adres kayıtlıysa bir giriş e-postası gönderildi. E-postadaki bağlantıya bu tarayıcıda tıkla; e-postada kod varsa aşağıya yaz.';
   });
   submit('fCode', async (v) => {
     const r = await call('/verify', { type: 'email', email, token: v });
@@ -111,5 +111,21 @@
   $('reload').addEventListener('click', () => load());
   for (const e of ['click', 'keydown', 'scroll']) window.addEventListener(e, touch, { passive: true });
 
-  if (!CFG.url || !CFG.key) { $('login').hidden = false; msg('Panel yapılandırılmamış.'); } else show('fEmail');
+  // Arriving from the sign-in e-mail's link: the session is in the address's fragment (never sent to any server).
+  // Take it into memory and wipe it from the address bar and history at once. It is only the first of three locks.
+  function fromLink() {
+    const h = new URLSearchParams(location.hash.replace(/^#/, ''));
+    if (location.hash) history.replaceState(null, '', location.pathname);
+    const at = h.get('access_token'), rt = h.get('refresh_token');
+    if (at && rt && h.get('token_type') === 'bearer') { keep({ access_token: at, refresh_token: rt, expires_in: Number(h.get('expires_in')) || 3600 }); return 'ok'; }
+    return h.get('error') ? 'error' : 'none';
+  }
+
+  if (!CFG.url || !CFG.key) { $('login').hidden = false; msg('Panel yapılandırılmamış.'); }
+  else {
+    const arrived = fromLink();
+    show('fEmail');
+    if (arrived === 'ok') afterEmail().catch(() => signOut('Bağlantı kurulamadı. Yeniden dene.'));
+    else if (arrived === 'error') msg('Bağlantının süresi dolmuş ya da daha önce kullanılmış. Yeni bir e-posta iste.');
+  }
 })();
