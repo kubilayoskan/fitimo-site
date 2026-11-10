@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src data:; connect-src https://bvzlpgxiykovrxuequva.supabase.co; base-uri 'none'; form-action 'none'">
+<title>Fitimo Yönetim Paneli</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main id="login" class="narrow" hidden>
+  <h1>Fitimo Yönetim Paneli</h1>
+  <p class="sub" id="loginHint"></p>
+  <form id="fEmail" class="card stack" hidden>
+    <label for="email">E-posta</label>
+    <input id="email" type="email" autocomplete="username" required maxlength="120">
+    <button type="submit">Kod gönder</button>
+  </form>
+  <form id="fCode" class="card stack" hidden>
+    <label for="code">E-postana gelen kod</label>
+    <input id="code" inputmode="numeric" autocomplete="one-time-code" required pattern="[0-9]{6,10}" maxlength="10">
+    <button type="submit">Devam</button>
+    <button type="button" class="link" id="backEmail">Başka e-posta</button>
+  </form>
+  <form id="fEnroll" class="card stack" hidden>
+    <strong>İkinci adımı kur (bir kez)</strong>
+    <p class="sub">Telefonundaki doğrulama uygulamasıyla (Google Authenticator, 1Password, Apple Parolalar…) bu kareyi okut, sonra uygulamanın gösterdiği 6 haneli kodu yaz.</p>
+    <img id="qr" alt="Doğrulama uygulaması için kare kod" width="200" height="200">
+    <p class="sub">Kareyi okutamıyorsan şu anahtarı elle gir: <code id="secret"></code></p>
+    <label for="enrollCode">Uygulamadaki kod</label>
+    <input id="enrollCode" inputmode="numeric" autocomplete="one-time-code" required pattern="[0-9]{6}" maxlength="6">
+    <button type="submit">Kur ve gir</button>
+  </form>
+  <form id="fTotp" class="card stack" hidden>
+    <label for="totp">Doğrulama uygulamasındaki kod</label>
+    <input id="totp" inputmode="numeric" autocomplete="one-time-code" required pattern="[0-9]{6}" maxlength="6">
+    <button type="submit">Gir</button>
+  </form>
+  <p class="msg" id="msg" role="alert"></p>
+</main>
+
+<main id="panel" hidden>
+<header>
+  <div><h1>Fitimo Yönetim Paneli</h1><div class="sub" id="gen"></div></div>
+  <div class="tools">
+    <div class="seg" id="win" role="group" aria-label="Dönem"></div>
+    <button type="button" class="ghost" id="reload">Yenile</button>
+    <button type="button" class="ghost" id="logout">Çıkış</button>
+  </div>
+</header>
+
+<div class="grid kpis" id="kpis"></div>
+
+<h2>Günlük seyir</h2>
+<div class="card">
+  <div class="between"><h3 id="dailyTitle"></h3><div class="seg" id="metric" role="group" aria-label="Ölçü"></div></div>
+  <div class="chartwrap"><svg id="daily" viewBox="0 0 1000 240" role="img"></svg><div class="tip" id="tip"></div></div>
+</div>
+
+<h2>Gelir ve abonelikler</h2>
+<div class="grid kpis" id="revenue"></div>
+<div class="note" id="revenueNote"></div>
+
+<h2>Geri gelme (tüm zamanlar)</h2>
+<div class="grid kpis" id="ret"></div>
+<div class="note">İlk açılıştan 1, 7 ve 30 gün sonra uygulamayı yeniden açan kurulumların oranı. Yalnızca o kadar gün önce gelmiş kurulumlar sayılır.</div>
+
+<h2>Huniler</h2>
+<div class="grid cards" id="funnels"></div>
+
+<h2>Abonelik ekranı, reklam ve izinler</h2>
+<div class="grid cards" id="money"></div>
+
+<h2>Kullanım</h2>
+<div class="grid cards" id="usage"></div>
+
+<h2>Hatalar ve çökme</h2>
+<div class="grid kpis" id="crash"></div>
+<div class="card scroll" id="issuesCard"><table id="issues"></table></div>
+
+<h2>Maliyet ve servisler</h2>
+<div class="grid kpis" id="services"></div>
+<div class="grid cards" id="servicesCards"></div>
+
+<h2>Hesaplar ve talepler</h2>
+<div class="grid kpis" id="accounts"></div>
+<div class="grid cards" id="accountsCards"></div>
+
+<h2>Tüm olaylar</h2>
+<div class="card scroll"><table id="events"></table></div>
+
+<h2>Sürüm, dil, platform</h2>
+<div class="grid cards" id="dims"></div>
+
+<h2>Kontroller</h2>
+<div class="card" id="checks"></div>
+
+<h2>Panele erişim kayıtları</h2>
+<div class="card scroll"><table id="audit"></table></div>
+<div class="note" id="foot"></div>
+</main>
+<script src="config.js"></script>
+<script src="render.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
