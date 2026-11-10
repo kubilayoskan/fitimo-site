@@ -13,30 +13,25 @@
 <main id="login" class="narrow" hidden>
   <h1>Fitimo Yönetim Paneli</h1>
   <p class="sub" id="loginHint"></p>
-  <form id="fEmail" class="card stack" hidden>
-    <label for="email">E-posta</label>
-    <input id="email" type="email" autocomplete="username" required maxlength="120">
-    <button type="submit">Kod gönder</button>
+  <form id="fLogin" class="card stack" hidden autocomplete="off">
+    <label for="pass">Parola</label>
+    <input id="pass" type="password" autocomplete="current-password" required maxlength="200">
+    <label for="code">Doğrulama uygulamasındaki kod</label>
+    <input id="code" inputmode="numeric" autocomplete="one-time-code" required pattern="[0-9]{6}" maxlength="6">
+    <button type="submit">Gir</button>
   </form>
-  <form id="fCode" class="card stack" hidden>
-    <label for="code">E-postana gelen kod</label>
-    <input id="code" inputmode="numeric" autocomplete="one-time-code" required pattern="[0-9]{6,10}" maxlength="10">
-    <button type="submit">Devam</button>
-    <button type="button" class="link" id="backEmail">Başka e-posta</button>
-  </form>
-  <form id="fEnroll" class="card stack" hidden>
-    <strong>İkinci adımı kur (bir kez)</strong>
-    <p class="sub">Telefonundaki doğrulama uygulamasıyla (Google Authenticator, 1Password, Apple Parolalar…) bu kareyi okut, sonra uygulamanın gösterdiği 6 haneli kodu yaz.</p>
+  <form id="fSetup" class="card stack" hidden autocomplete="off">
+    <strong>İlk kurulum (bir kez)</strong>
+    <p class="sub">1. Telefonundaki doğrulama uygulamasıyla (Google Authenticator, Apple Parolalar, 1Password…) bu kareyi okut.</p>
     <img id="qr" alt="Doğrulama uygulaması için kare kod" width="200" height="200">
     <p class="sub">Kareyi okutamıyorsan şu anahtarı elle gir: <code id="secret"></code></p>
-    <label for="enrollCode">Uygulamadaki kod</label>
-    <input id="enrollCode" inputmode="numeric" autocomplete="one-time-code" required pattern="[0-9]{6}" maxlength="6">
+    <label for="newPass">2. Bir parola belirle (en az 10 karakter)</label>
+    <input id="newPass" type="password" autocomplete="new-password" required minlength="10" maxlength="200">
+    <label for="newPass2">Parolayı yeniden yaz</label>
+    <input id="newPass2" type="password" autocomplete="new-password" required minlength="10" maxlength="200">
+    <label for="setupCode">3. Uygulamanın gösterdiği 6 haneli kod</label>
+    <input id="setupCode" inputmode="numeric" autocomplete="one-time-code" required pattern="[0-9]{6}" maxlength="6">
     <button type="submit">Kur ve gir</button>
-  </form>
-  <form id="fTotp" class="card stack" hidden>
-    <label for="totp">Doğrulama uygulamasındaki kod</label>
-    <input id="totp" inputmode="numeric" autocomplete="one-time-code" required pattern="[0-9]{6}" maxlength="6">
-    <button type="submit">Gir</button>
   </form>
   <p class="msg" id="msg" role="alert"></p>
 </main>
@@ -103,6 +98,6 @@
 </main>
 <script src="config.js?v=86e3a42bd0"></script>
 <script src="render.js?v=abbc64f032"></script>
-<script src="app.js?v=1c019a2e3b"></script>
+<script src="app.js?v=5c2dce65c5"></script>
 </body>
 </html>

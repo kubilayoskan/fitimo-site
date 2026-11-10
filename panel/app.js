@@ -1,131 +1,102 @@
-// Fitimo admin panel — sign-in and data loading. The page holds no secret: the key in config.js is the app's public
-// key. The session lives in memory only (never in localStorage), so closing or reloading the tab signs you out.
+// Fitimo admin panel — sign-in and data loading (D-197: passphrase + authenticator app, no e-mail).
+// The page holds no secret. The session token lives in memory only (never in localStorage or a cookie), so closing
+// or reloading the tab signs you out.
 (function () {
   'use strict';
   // Never run inside another site's frame (clickjacking).
   if (window.top !== window.self) { document.documentElement.replaceChildren(); return; }
 
   const CFG = window.FITIMO_ADMIN || {};
-  const AUTH = CFG.url + '/auth/v1', API = CFG.url + '/functions/v1/admin-api';
+  const API = CFG.url + '/functions/v1/admin-api';
   const IDLE_MS = 15 * 60 * 1000;
   const $ = (id) => document.getElementById(id);
-  let session = null, email = '', factorId = '', days = 30, idleTimer = 0, refreshTimer = 0;
+  let session = '', setupToken = '', days = 30, idleTimer = 0;
 
   const msg = (t) => { $('msg').textContent = t || ''; };
-  const show = (form) => { for (const f of ['fEmail', 'fCode', 'fEnroll', 'fTotp']) $(f).hidden = f !== form; $('login').hidden = false; $('panel').hidden = true; const i = $(form).querySelector('input'); if (i) { i.value = ''; i.focus(); } };
-
-  async function call(path, body, method) {
-    const headers = { apikey: CFG.key, 'Content-Type': 'application/json' };
-    if (session) headers.Authorization = 'Bearer ' + session.access_token;
-    const r = await fetch(AUTH + path, { method: method || 'POST', headers, body: body ? JSON.stringify(body) : undefined, cache: 'no-store', credentials: 'omit' });
-    let data = null; try { data = await r.json(); } catch { /* empty answer */ }
-    return { ok: r.ok, status: r.status, data: data || {} };
-  }
-  function keep(s) {
-    session = { access_token: s.access_token, refresh_token: s.refresh_token };
-    clearTimeout(refreshTimer);
-    refreshTimer = setTimeout(refresh, Math.max(60, (s.expires_in || 3600) - 120) * 1000);
-  }
-  async function refresh() {
-    if (!session) return;
-    const r = await call('/token?grant_type=refresh_token', { refresh_token: session.refresh_token }).catch(() => null);
-    if (r && r.ok && r.data.access_token) keep(r.data); else signOut('Oturumun süresi doldu. Yeniden gir.');
-  }
-  function signOut(text) {
-    const s = session; session = null; clearTimeout(refreshTimer); clearTimeout(idleTimer);
-    if (s) fetch(AUTH + '/logout?scope=local', { method: 'POST', headers: { apikey: CFG.key, Authorization: 'Bearer ' + s.access_token }, credentials: 'omit' }).catch(() => {});
-    for (const id of ['kpis', 'revenue', 'ret', 'funnels', 'money', 'usage', 'crash', 'issues', 'services', 'servicesCards', 'accounts', 'accountsCards', 'events', 'dims', 'checks', 'audit']) $(id).replaceChildren();
-    show('fEmail'); msg(text);
-  }
-  function touch() { clearTimeout(idleTimer); if (session) idleTimer = setTimeout(() => signOut('15 dakika işlem yapılmadığı için çıkış yapıldı.'), IDLE_MS); }
+  const show = (form) => {
+    for (const f of ['fLogin', 'fSetup']) { $(f).hidden = f !== form; $(f).reset(); }
+    $('login').hidden = false; $('panel').hidden = true;
+    const first = $(form).querySelector('input'); if (first) first.focus();
+  };
 
   async function api(body) {
-    const r = await fetch(API, { method: 'POST', headers: { Authorization: 'Bearer ' + session.access_token, 'Content-Type': 'application/json' }, body: JSON.stringify(body), cache: 'no-store', credentials: 'omit' });
+    const headers = { 'Content-Type': 'application/json' };
+    if (session) headers.Authorization = 'Bearer ' + session;
+    const r = await fetch(API, { method: 'POST', headers, body: JSON.stringify(body), cache: 'no-store', credentials: 'omit' });
     let data = null; try { data = await r.json(); } catch { /* not json */ }
     return { status: r.status, data: data || {} };
   }
 
-  // After the e-mail code: is this an admin account, and does it still need the second step?
-  async function afterEmail() {
-    const who = await api({ action: 'whoami' });
-    if (who.status === 200) return load();
-    if (who.status === 401 && who.data.error === 'second-step-required') return secondStep();
-    if (who.status === 429) return signOut('Çok fazla deneme. Birkaç dakika sonra yeniden dene.');
-    signOut(who.status === 403 ? 'Bu hesabın panele erişim yetkisi yok.' : 'Giriş yapılamadı.');
+  function signOut(text) {
+    if (session) api({ action: 'logout' }).catch(() => {});
+    session = ''; clearTimeout(idleTimer);
+    for (const id of ['kpis', 'revenue', 'ret', 'funnels', 'money', 'usage', 'crash', 'issues', 'services', 'servicesCards', 'accounts', 'accountsCards', 'events', 'dims', 'checks', 'audit']) $(id).replaceChildren();
+    show('fLogin'); msg(text);
   }
-  async function secondStep() {
-    const u = await call('/user', null, 'GET');
-    if (!u.ok) return signOut('Giriş yapılamadı.');
-    const factors = (u.data.factors || []).filter((f) => f.factor_type === 'totp');
-    const verified = factors.find((f) => f.status === 'verified');
-    if (verified) { factorId = verified.id; msg(''); return show('fTotp'); }
-    for (const f of factors) await call('/factors/' + encodeURIComponent(f.id), null, 'DELETE'); // half-finished set-ups
-    const e = await call('/factors', { factor_type: 'totp', friendly_name: 'Fitimo panel ' + Date.now() });
-    if (!e.ok || !e.data.totp) return signOut('İkinci adım kurulamadı. Yeniden dene.');
-    factorId = e.data.id;
-    const qr = String(e.data.totp.qr_code || '');
-    $('qr').src = qr.startsWith('data:') ? qr : 'data:image/svg+xml;utf-8,' + encodeURIComponent(qr);
-    $('secret').textContent = String(e.data.totp.secret || '');
-    msg(''); show('fEnroll');
-  }
-  async function verifyTotp(code) {
-    const c = await call('/factors/' + encodeURIComponent(factorId) + '/challenge', {});
-    if (!c.ok) return false;
-    const v = await call('/factors/' + encodeURIComponent(factorId) + '/verify', { challenge_id: c.data.id, code });
-    if (!v.ok || !v.data.access_token) return false;
-    keep(v.data); $('qr').removeAttribute('src'); $('secret').textContent = '';
-    return true;
-  }
+  function touch() { clearTimeout(idleTimer); if (session) idleTimer = setTimeout(() => signOut('15 dakika işlem yapılmadığı için çıkış yapıldı.'), IDLE_MS); }
+
   async function load() {
     touch();
     const r = await api({ action: 'overview', days });
     if (r.status === 200) { $('login').hidden = true; $('panel').hidden = false; msg(''); window.FitimoPanel.render(r.data, (d) => { days = d; load(); }); return; }
     if (r.status === 429) { $('gen').textContent = 'Çok sık yenilendi; birkaç dakika sonra yeniden dene.'; return; }
     if (r.status === 503) { $('gen').textContent = 'Veri şu an alınamadı; biraz sonra yeniden dene.'; if ($('panel').hidden) signOut('Veri şu an alınamadı.'); return; }
-    signOut(r.status === 403 ? 'Bu hesabın panele erişim yetkisi yok.' : 'Oturum sona erdi. Yeniden gir.');
+    signOut('Oturum sona erdi. Yeniden gir.');
   }
 
-  const busy = (form, on) => { for (const b of form.querySelectorAll('button')) b.disabled = on; };
+  const LOCKED = 'Çok fazla yanlış deneme. 15 dakika sonra yeniden dene.';
   const submit = (id, fn) => $(id).addEventListener('submit', async (ev) => {
-    ev.preventDefault(); const form = ev.currentTarget; busy(form, true); msg('');
-    try { await fn(form.querySelector('input').value.trim()); } catch { msg('Bağlantı kurulamadı. Yeniden dene.'); }
-    busy(form, false);
+    ev.preventDefault(); const form = ev.currentTarget;
+    for (const b of form.querySelectorAll('button')) b.disabled = true; msg('');
+    try { await fn(); } catch { msg('Bağlantı kurulamadı. Yeniden dene.'); }
+    for (const b of form.querySelectorAll('button')) b.disabled = false;
   });
 
-  submit('fEmail', async (v) => {
-    email = v.toLowerCase();
-    const r = await call('/otp?redirect_to=' + encodeURIComponent(location.origin + location.pathname), { email, create_user: false });
-    if (r.status === 429) return msg('Çok fazla deneme. Bir süre sonra yeniden dene.');
-    // Same answer whether or not the address has an account.
-    show('fCode'); $('loginHint').textContent = 'Bu adres kayıtlıysa bir giriş e-postası gönderildi. E-postadaki bağlantıya bu tarayıcıda tıkla; e-postada kod varsa aşağıya yaz.';
+  submit('fLogin', async () => {
+    const r = await api({ action: 'login', passphrase: $('pass').value, code: $('code').value.trim() });
+    $('pass').value = ''; $('code').value = '';
+    if (r.status === 200 && r.data.session) { session = r.data.session; return load(); }
+    msg(r.status === 429 ? LOCKED : r.status === 401 ? 'Parola ya da kod yanlış.' : 'Giriş şu an yapılamıyor. Biraz sonra yeniden dene.');
+    $('pass').focus();
   });
-  submit('fCode', async (v) => {
-    const r = await call('/verify', { type: 'email', email, token: v });
-    if (!r.ok || !r.data.access_token) return msg(r.status === 429 ? 'Çok fazla deneme. Bir süre sonra yeniden dene.' : 'Kod yanlış ya da süresi dolmuş.');
-    keep(r.data); $('loginHint').textContent = ''; await afterEmail();
+
+  submit('fSetup', async () => {
+    const p1 = $('newPass').value, p2 = $('newPass2').value;
+    if (p1 !== p2) return msg('İki parola aynı değil.');
+    if (p1.length < 10) return msg('Parola en az 10 karakter olmalı.');
+    const r = await api({ action: 'setup-finish', setupToken, passphrase: p1, code: $('setupCode').value.trim() });
+    if (r.status === 200 && r.data.session) {
+      session = r.data.session; setupToken = ''; $('qr').removeAttribute('src'); $('secret').textContent = ''; $('fSetup').reset();
+      return load();
+    }
+    $('setupCode').value = '';
+    msg(r.status === 429 ? LOCKED : r.data.error === 'code-wrong' ? 'Kod yanlış. Uygulamadaki güncel kodu yaz.' : r.data.error === 'setup-invalid' ? 'Kurulum bağlantısının süresi dolmuş. Yenisi gerekiyor.' : 'Kurulum tamamlanamadı. Yeniden dene.');
   });
-  submit('fEnroll', async (v) => { if (await verifyTotp(v)) await load(); else msg('Kod yanlış. Uygulamadaki güncel kodu yaz.'); });
-  submit('fTotp', async (v) => { if (await verifyTotp(v)) await load(); else msg('Kod yanlış. Uygulamadaki güncel kodu yaz.'); });
-  $('backEmail').addEventListener('click', () => { $('loginHint').textContent = ''; msg(''); show('fEmail'); });
+
+  async function startSetup() {
+    show('fSetup'); $('loginHint').textContent = '';
+    const r = await api({ action: 'setup-start', setupToken });
+    if (r.status !== 200 || !r.data.secret) { setupToken = ''; show('fLogin'); return msg(r.status === 429 ? LOCKED : 'Kurulum bağlantısı geçersiz ya da süresi dolmuş. Yenisi gerekiyor.'); }
+    $('qr').src = 'data:image/svg+xml;utf-8,' + encodeURIComponent(String(r.data.qr));
+    $('secret').textContent = String(r.data.secret).replace(/(.{4})/g, '$1 ').trim();
+  }
+
   $('logout').addEventListener('click', () => signOut(''));
   $('reload').addEventListener('click', () => load());
   for (const e of ['click', 'keydown', 'scroll']) window.addEventListener(e, touch, { passive: true });
 
-  // Arriving from the sign-in e-mail's link: the session is in the address's fragment (never sent to any server).
-  // Take it into memory and wipe it from the address bar and history at once. It is only the first of three locks.
-  function fromLink() {
-    const h = new URLSearchParams(location.hash.replace(/^#/, ''));
+  if (!CFG.url) { $('login').hidden = false; msg('Panel yapılandırılmamış.'); return; }
+  // A one-time set-up link carries its token in the fragment (never sent to the site's server). Take it into memory
+  // and wipe it from the address bar and history at once.
+  function fromAddress() {
+    const m = /^#setup=([A-Za-z0-9_-]{20,100})$/.exec(location.hash);
     if (location.hash) history.replaceState(null, '', location.pathname);
-    const at = h.get('access_token'), rt = h.get('refresh_token');
-    if (at && rt && h.get('token_type') === 'bearer') { keep({ access_token: at, refresh_token: rt, expires_in: Number(h.get('expires_in')) || 3600 }); return 'ok'; }
-    return h.get('error') ? 'error' : 'none';
+    if (!m) return false;
+    if (session) signOut('');
+    setupToken = m[1];
+    startSetup().catch(() => { show('fLogin'); msg('Bağlantı kurulamadı. Yeniden dene.'); });
+    return true;
   }
-
-  if (!CFG.url || !CFG.key) { $('login').hidden = false; msg('Panel yapılandırılmamış.'); }
-  else {
-    const arrived = fromLink();
-    show('fEmail');
-    if (arrived === 'ok') afterEmail().catch(() => signOut('Bağlantı kurulamadı. Yeniden dene.'));
-    else if (arrived === 'error') msg('Bağlantının süresi dolmuş ya da daha önce kullanılmış. Yeni bir e-posta iste.');
-  }
+  window.addEventListener('hashchange', fromAddress);
+  if (!fromAddress()) show('fLogin');
 })();
