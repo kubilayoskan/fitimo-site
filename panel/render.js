@@ -165,8 +165,8 @@
     check(D.refused24h ? 'wa' : 'ok', 'Reddedilen panel girişi (24 saat)', nf.format(D.refused24h || 0));
 
     table($('audit'), [{ t: 'Zaman' }, { t: 'İşlem' }, { t: 'Sonuç' }],
-      (D.audit || []).map((a) => [when(a.at), a.action === 'overview' ? 'Panel açıldı' : a.action === 'whoami' ? 'Giriş denemesi' : a.action, a.ok ? 'İzin verildi' : 'Reddedildi' + (a.reason === 'not-admin' ? ' (yetkisiz hesap)' : '')]), 'Kayıt yok.');
-    $('foot').textContent = 'Panel yalnızca okur; hiçbir veriyi değiştirmez. Sayılar toplamdır: kişi, kilo, yemek ya da sağlık bilgisi gösterilmez.';
+      (D.audit || []).map((a) => [when(a.at), a.action === 'overview' ? 'Panel açıldı' : a.action === 'whoami' ? 'Giriş denemesi' : a.action === 'feedback-reply' ? 'Mesaj yanıtlandı' : a.action === 'feedback-done' ? 'Mesaj kapatıldı / açıldı' : a.action, a.ok ? 'İzin verildi' : 'Reddedildi' + (a.reason === 'not-admin' ? ' (yetkisiz hesap)' : '')]), 'Kayıt yok.');
+    $('foot').textContent = 'Panel, istek ve önerilere verdiğin yanıtlar dışında hiçbir veriyi değiştirmez. Sayılar toplamdır: kişi, kilo, yemek ya da sağlık bilgisi gösterilmez.';
   }
 
   function drawDaily(daily) {
@@ -193,5 +193,39 @@
     svg.setAttribute('aria-label', 'Günlük ' + METRICS[metric].toLowerCase() + ', son ' + daily.length + ' gün');
   }
 
-  window.FitimoPanel = { render };
+  // ── İstek ve öneriler (D-207) ── every text is written with textContent; drafts survive the 30-second refresh.
+  const KIND = { idea: 'Öneri', bug: 'Hata', other: 'Diğer' };
+  const drafts = {};
+  let fbFilter = 'open', fbLast = '';
+  function renderFeedback(F, on, force) {
+    const key = JSON.stringify(F) + fbFilter;
+    if (!force && key === fbLast) return;
+    fbLast = key;
+    const items = F.items || [], open = items.filter((i) => !i.done);
+    const pill = $('fbOpen'); pill.hidden = !open.length; pill.textContent = nf.format(F.open != null ? F.open : open.length) + ' yeni';
+    seg($('fbFilter'), { open: 'Bekleyenler', all: 'Hepsi' }, fbFilter, (k) => { fbFilter = k; renderFeedback(F, on, true); });
+    $('fbInfo').textContent = 'Liste 30 saniyede bir kendiliğinden yenilenir · ' + when(new Date().toISOString());
+    const focused = document.activeElement && document.activeElement.dataset ? document.activeElement.dataset.fb : null;
+    const host = $('fbList'); host.replaceChildren();
+    const shown = fbFilter === 'open' ? open : items;
+    if (!shown.length) { const c = el('div', 'card fb'); c.append(el('div', 'empty', fbFilter === 'open' ? 'Bekleyen mesaj yok.' : 'Henüz mesaj yok.')); host.append(c); return; }
+    for (const i of shown) {
+      const c = el('div', 'card fb'), meta = el('div', 'meta');
+      meta.append(el('span', 'tag' + (i.done ? '' : ' new'), i.done ? (i.reply ? 'Yanıtlandı' : 'Kapatıldı') : 'Yeni'), el('span', 'tag', KIND[i.kind] || i.kind), el('span', null, when(i.created_at)),
+        el('span', null, [i.pro == null ? null : i.pro ? 'PRO' : 'Ücretsiz', i.locale, i.platform === 'ios' ? 'iOS' : i.platform === 'android' ? 'Android' : null, i.app_version ? 'sürüm ' + i.app_version : null].filter(Boolean).join(' · ')));
+      const body = el('div', 'text'); body.textContent = String(i.message); // full text, not the 200-character cut of el()
+      c.append(meta, body);
+      if (i.reply) { const a = el('div', 'answer'); a.append(el('small', null, 'Yanıtın · ' + when(i.replied_at) + (i.seen_at ? ' · kullanıcı gördü' : ' · henüz görülmedi'))); a.append(document.createTextNode(String(i.reply))); c.append(a); }
+      const ta = document.createElement('textarea'); ta.maxLength = 2000; ta.dataset.fb = i.id; ta.placeholder = i.reply ? 'Yanıtı değiştir…' : 'Yanıt yaz… (kullanıcı uygulamada görür)'; ta.value = drafts[i.id] || '';
+      ta.addEventListener('input', () => { drafts[i.id] = ta.value; });
+      const acts = el('div', 'acts'), send = el('button', 'send', 'Yanıtla'), done = el('button', 'ghost', i.done ? 'Yeniden aç' : 'Yanıtsız kapat');
+      send.type = done.type = 'button';
+      send.onclick = () => { const v = ta.value.trim(); if (!v) { ta.focus(); return; } send.disabled = true; delete drafts[i.id]; on.reply(i.id, v); };
+      done.onclick = () => { done.disabled = true; on.done(i.id, !i.done); };
+      acts.append(send, done); c.append(ta, acts); host.append(c);
+      if (focused === i.id) ta.focus();
+    }
+  }
+
+  window.FitimoPanel = { render, renderFeedback };
 })();

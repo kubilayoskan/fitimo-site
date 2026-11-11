@@ -10,7 +10,7 @@
   const API = CFG.url + '/functions/v1/admin-api';
   const IDLE_MS = 15 * 60 * 1000;
   const $ = (id) => document.getElementById(id);
-  let session = '', setupToken = '', days = 30, idleTimer = 0;
+  let session = '', setupToken = '', days = 30, idleTimer = 0, fbTimer = 0;
 
   const msg = (t) => { $('msg').textContent = t || ''; };
   const show = (form) => {
@@ -29,8 +29,8 @@
 
   function signOut(text) {
     if (session) api({ action: 'logout' }).catch(() => {});
-    session = ''; clearTimeout(idleTimer);
-    for (const id of ['kpis', 'revenue', 'ret', 'funnels', 'money', 'usage', 'crash', 'issues', 'services', 'servicesCards', 'accounts', 'accountsCards', 'events', 'dims', 'checks', 'audit']) $(id).replaceChildren();
+    session = ''; clearTimeout(idleTimer); clearInterval(fbTimer);
+    for (const id of ['fbList', 'kpis', 'revenue', 'ret', 'funnels', 'money', 'usage', 'crash', 'issues', 'services', 'servicesCards', 'accounts', 'accountsCards', 'events', 'dims', 'checks', 'audit']) $(id).replaceChildren();
     show('fLogin'); msg(text);
   }
   function touch() { clearTimeout(idleTimer); if (session) idleTimer = setTimeout(() => signOut('15 dakika işlem yapılmadığı için çıkış yapıldı.'), IDLE_MS); }
@@ -38,10 +38,28 @@
   async function load() {
     touch();
     const r = await api({ action: 'overview', days });
-    if (r.status === 200) { $('login').hidden = true; $('panel').hidden = false; msg(''); window.FitimoPanel.render(r.data, (d) => { days = d; load(); }); return; }
+    if (r.status === 200) { $('login').hidden = true; $('panel').hidden = false; msg(''); window.FitimoPanel.render(r.data, (d) => { days = d; load(); }); startFeedback(); return; }
     if (r.status === 429) { $('gen').textContent = 'Çok sık yenilendi; birkaç dakika sonra yeniden dene.'; return; }
     if (r.status === 503) { $('gen').textContent = 'Veri şu an alınamadı; biraz sonra yeniden dene.'; if ($('panel').hidden) signOut('Veri şu an alınamadı.'); return; }
     signOut('Oturum sona erdi. Yeniden gir.');
+  }
+
+  // Requests and suggestions (D-207): loaded with the panel, then every 30 seconds while the tab is in front.
+  const fbActions = {
+    reply: (id, reply) => api({ action: 'feedback-reply', id, reply }).then(() => loadFeedback(true), () => loadFeedback(true)),
+    done: (id, done) => api({ action: 'feedback-done', id, done }).then(() => loadFeedback(true), () => loadFeedback(true)),
+  };
+  async function loadFeedback(force) {
+    if (!session) return;
+    try {
+      const r = await api({ action: 'feedback' });
+      if (r.status === 200) window.FitimoPanel.renderFeedback(r.data, fbActions, force);
+      else if (r.status === 401) signOut('Oturum sona erdi. Yeniden gir.');
+    } catch { /* offline: the next round tries again */ }
+  }
+  function startFeedback() {
+    clearInterval(fbTimer); loadFeedback(true);
+    fbTimer = setInterval(() => { if (!document.hidden) loadFeedback(false); }, 30000);
   }
 
   const LOCKED = 'Çok fazla yanlış deneme. 15 dakika sonra yeniden dene.';

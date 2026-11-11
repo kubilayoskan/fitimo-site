@@ -53,3 +53,16 @@ svg{display:block;width:100%;height:auto}
 .chk b{flex:none;width:86px;font-size:12.5px}
 .ok b{color:var(--good)}.wa b{color:var(--warn)}.ba b{color:var(--bad)}
 .note{color:var(--muted);font-size:12.5px;margin-top:8px}
+.pill{display:inline-block;background:var(--bad);color:#fff;border-radius:999px;font-size:12px;font-weight:600;padding:1px 9px;margin-left:6px;vertical-align:middle}
+.fb{margin-top:12px}
+.fb .meta{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;color:var(--muted);font-size:12.5px;margin-bottom:8px}
+.fb .tag{border:1px solid var(--line);border-radius:999px;padding:1px 9px;color:var(--text2);font-size:12px}
+.fb .tag.new{border-color:var(--bad);color:var(--bad)}
+.fb .text{white-space:pre-wrap;overflow-wrap:anywhere;font-size:14.5px}
+.fb .answer{margin-top:10px;padding:10px 12px;border-left:3px solid var(--series);background:var(--bg);border-radius:0 10px 10px 0;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px}
+.fb .answer small{display:block;color:var(--muted);margin-bottom:4px}
+.fb textarea{width:100%;min-height:74px;margin-top:10px;font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--text);resize:vertical}
+.fb .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;align-items:center}
+.fb .send{font:inherit;font-weight:600;padding:8px 16px;border:0;border-radius:10px;background:var(--text);color:var(--surface);cursor:pointer}
+.fb button:disabled{opacity:.5;cursor:default}
+
